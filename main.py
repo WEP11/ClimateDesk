@@ -12,6 +12,34 @@ from bs4 import BeautifulSoup as bshtml
 def callClimateReports():
     webbrowser.open_new_tab("https://www.ncdc.noaa.gov/sotc/")
 
+def drawTextScroll(parent, text):
+        l = ScrolledText(parent)
+        l.insert(tk.INSERT, text)
+        l.grid(row=0, column=0)
+
+def aboutBox():
+    window = tk.Toplevel()
+    window.wm_title("About Climate Desk")
+
+    info1 = tk.Label(window)
+    info1.configure(text="Climate Desk", font='Helvetica 18 bold')
+    info1.grid(row=1, column=0, padx=5, pady=5)
+
+    info2 = tk.Label(window)
+    info2.configure(text="(c)2018 Warren Pettee")
+    info2.grid(row=2, column=0)
+
+    info4 = tk.Label(window)
+    info4.configure(text="Climate Desk is a weather and climate data dashboard that aggregates products from across the public space.")
+    info4.grid(row=3, column=0)
+
+    info4 = tk.Label(window)
+    info4.configure(text="Report bugs on GitHub!")
+    info4.grid(row=5, column=0)
+
+    b = ttk.Button(window, text="Close", command=window.destroy)
+    b.grid(row=7, column=0)
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -113,15 +141,15 @@ class Application(tk.Frame):
         natlSpc = tk.Button(nationalWx, text="SPC Outlooks", command=lambda: self.showSpcOutlook(panel, nationalWx))
         natlRad = tk.Button(nationalWx, text="Radar")
 
-        natlMap1.grid(row=0, column=0)
-        natlMap2.grid(row=1, column=0)
-        natlMap3.grid(row=2, column=0)
-        natlForc.grid(row=3, column=0)
-        natlVis.grid(row=4, column=0)
-        natlIR.grid(row=5, column=0)
-        natlWV.grid(row=6, column=0)
-        natlSpc.grid(row=7, column=0)
-        natlRad.grid(row=8, column=0)
+        natlMap1.grid(row=0, column=0, sticky='W')
+        natlMap2.grid(row=1, column=0, sticky='W')
+        natlMap3.grid(row=2, column=0, sticky='W')
+        natlForc.grid(row=3, column=0, sticky='W')
+        natlVis.grid(row=4, column=0, sticky='W')
+        natlIR.grid(row=5, column=0, sticky='W')
+        natlWV.grid(row=6, column=0, sticky='W')
+        natlSpc.grid(row=7, column=0, sticky='W')
+        natlRad.grid(row=8, column=0, sticky='W')
 
         self.showNewImage(panel, self.images[0])
 
@@ -146,6 +174,9 @@ class Application(tk.Frame):
         self.quit = tk.Button(self, text="Exit", fg="red",
                               command=root.destroy)
         self.quit.pack(side="bottom")
+
+        # Finish up by displaying about box
+        aboutBox()
 
     def showNewImage(self, panel, image, parent=False):
         """
@@ -313,17 +344,37 @@ class Application(tk.Frame):
         panel11.image = self.images[22]
         panel11.pack(side="bottom")
 
-        self.textWindow()
+        self.spcWindow()
 
-    def textWindow(self):
+    def spcWindow(self):
         window = tk.Toplevel()
-        window.wm_title("DISCUSSION TEXT")
+        window.wm_title("SPC DISCUSSION TEXT")
 
-        l = ScrolledText(window)
-        l.insert(tk.INSERT, self.text_prods[0])
-        l.grid(row=0, column=0)
-        b = ttk.Button(window, text="Okay", command=window.destroy)
+        canvas = ttk.Notebook(window)
+
+        d1 = ttk.Frame(canvas)
+        d2 = ttk.Frame(canvas)
+        d3 = ttk.Frame(canvas)
+        d48 = ttk.Frame(canvas)
+
+        canvas.add(d1, text='Day 1')
+        canvas.add(d2, text='Day 2')
+        canvas.add(d3, text='Day 3')
+        canvas.add(d48, text='Day 4-8')
+
+        canvas.grid(row=0, column=0, rowspan=20, columnspan=10, padx=5, pady=5)
+
+        drawTextScroll(d1, self.text_prods[0])
+        drawTextScroll(d2, self.text_prods[1])
+        drawTextScroll(d3, self.text_prods[2])
+        drawTextScroll(d48, self.text_prods[3])
+
+        b = ttk.Button(window, text="Close", command=window.destroy)
         b.grid(row=1, column=0)
+        
+ 
+    
+        
 
 root = tk.Tk()
 app = Application(master=root)
