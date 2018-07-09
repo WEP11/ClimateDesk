@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import requests
 import webbrowser
+from tkinter.scrolledtext import ScrolledText
 
 from io import BytesIO
 
@@ -103,20 +104,24 @@ class Application(tk.Frame):
         natlMap1 = tk.Button(nationalWx, text="Forecast Day 1", command=lambda: self.showNewImage(panel, self.images[0]))
         natlMap2 = tk.Button(nationalWx, text="Forecast Day 2", command=lambda: self.showNewImage(panel, self.images[1]))
         natlMap3 = tk.Button(nationalWx, text="Forecast Day 3", command=lambda: self.showNewImage(panel, self.images[2]))
+        natlForc = tk.Button(nationalWx, text="Day 3-7 Forecast", command=lambda: self.showMultiPane(panel, nationalWx))
+
         natlVis = tk.Button(nationalWx, text="Visible Satellite", command=lambda: self.showNewImage(panel, self.images[3]))
         natlIR = tk.Button(nationalWx, text="Infrared Satellite", command=lambda: self.showNewImage(panel, self.images[4]))
         natlWV = tk.Button(nationalWx, text="Water Vapor Satellite", command=lambda: self.showNewImage(panel, self.images[5]))
-        natlForc = tk.Button(nationalWx, text="Day 3-7 Forecast", command=lambda: self.showMultiPane(panel, nationalWx))
+        
         natlSpc = tk.Button(nationalWx, text="SPC Outlooks", command=lambda: self.showSpcOutlook(panel, nationalWx))
+        natlRad = tk.Button(nationalWx, text="Radar")
 
         natlMap1.grid(row=0, column=0)
         natlMap2.grid(row=1, column=0)
         natlMap3.grid(row=2, column=0)
-        natlVis.grid(row=3, column=0)
-        natlIR.grid(row=4, column=0)
-        natlWV.grid(row=5, column=0)
-        natlForc.grid(row=6, column=0)
+        natlForc.grid(row=3, column=0)
+        natlVis.grid(row=4, column=0)
+        natlIR.grid(row=5, column=0)
+        natlWV.grid(row=6, column=0)
         natlSpc.grid(row=7, column=0)
+        natlRad.grid(row=8, column=0)
 
         self.showNewImage(panel, self.images[0])
 
@@ -314,7 +319,8 @@ class Application(tk.Frame):
         window = tk.Toplevel()
         window.wm_title("DISCUSSION TEXT")
 
-        l = tk.Label(window, text=self.text_prods[0])
+        l = ScrolledText(window)
+        l.insert(tk.INSERT, self.text_prods[0])
         l.grid(row=0, column=0)
         b = ttk.Button(window, text="Okay", command=window.destroy)
         b.grid(row=1, column=0)
