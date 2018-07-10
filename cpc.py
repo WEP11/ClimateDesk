@@ -2,11 +2,22 @@ import webbrowser
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+from io import BytesIO
+
 from tkinter.scrolledtext import ScrolledText
 
 def callClimateReports():
     webbrowser.open_new_tab("https://www.ncdc.noaa.gov/sotc/")
 
+def createImageFrame(container, image):
+    frame = tk.Label(container)
+    imgFile = Image.open(BytesIO(image))
+    img = ImageTk.PhotoImage(imgFile)
+    frame.configure(image=img)
+    frame.image = img
+    frame.pack(side="bottom")
+
+    return frame
 
 def createCpcFrame(frame, idx, images):
     f = ttk.Notebook(frame)
@@ -18,15 +29,9 @@ def createCpcFrame(frame, idx, images):
     f.add(fp, text='Precipitation')
     f.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    p1 = tk.Label(ft)
-    p1.configure(image=images[idx])
-    p1.image = images[idx]
-    p1.pack(side="bottom")
+    p1 = createImageFrame(ft, images[idx])
+    p2 = createImageFrame(fp, images[idx+1])
 
-    p2 = tk.Label(fp)
-    p2.configure(image=images[idx+1])
-    p2.image = images[idx+1]
-    p2.pack(side="bottom")
 
 
 def cpcLrOutlook(container, images):
@@ -122,14 +127,7 @@ def cpcOutlook(container, images, droughtImages):
     f4.add(f4seas, text='Seasonal')
     f4.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    f4p1 = tk.Label(f4mnth)
-    f4p1.configure(image=droughtImages[0])
-    f4p1.image = droughtImages[0]
-    f4p1.pack(side="bottom")
-
-    f4p2 = tk.Label(f4seas)
-    f4p2.configure(image=droughtImages[1])
-    f4p2.image = droughtImages[1]
-    f4p2.pack(side="bottom")
+    f4p1 = createImageFrame(f4mnth, droughtImages[0])
+    f4p2 = createImageFrame(f4seas, droughtImages[1])
 
     return multipane

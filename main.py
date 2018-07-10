@@ -10,7 +10,7 @@ import spc as spc
 import cpc as cpc
 
 
-def aboutBox():
+def loadingBox():
     window = tk.Toplevel()
     window.wm_title("About Climate Desk")
 
@@ -30,9 +30,20 @@ def aboutBox():
     info4.configure(text="Report bugs on GitHub!")
     info4.grid(row=5, column=0)
 
-    b = ttk.Button(window, text="Close", command=window.destroy)
-    b.grid(row=7, column=0)
+    loading = ttk.Progressbar(window)
+    loading.grid(row=8, column=0)
+    loading.start()
+    loadingState = tk.Label(window)
+    loadingState.configure(text="LOADING")
+    loadingState.grid(row=9, column=0,padx=3, pady=5)
+    #b = ttk.Button(window, text="Close", command=window.destroy)
+    #b.grid(row=7, column=0)
+
     window.lift()
+    window.update()
+
+
+    return window, loading, loadingState
 
 
 def getImageList(links, imageList):
@@ -43,9 +54,9 @@ def getImageList(links, imageList):
     for link in links:
         try:
             response = requests.get(link, headers=headers)
-            imgFile = Image.open(BytesIO(response.content))
-            img = ImageTk.PhotoImage(imgFile)
-            imageList.append(img)
+            #imgFile = Image.open(BytesIO(response.content))
+            #img = ImageTk.PhotoImage(imgFile)
+            imageList.append(response.content)
         except:
             print(link)
 
@@ -54,11 +65,12 @@ class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.text_prods = []
-
         self.multipane = None
 
         self.pack()
+
         self.downloadImages()
+        
         self.create_widgets()
 
     def downloadImages(self):
@@ -66,6 +78,7 @@ class Application(tk.Frame):
         Downloads all images. The images need to be referenced to the
         application to hide from the garbage collecter, so we do it all here.
         """
+        about, loading, loadText = loadingBox()
 
         self.wpc = []
         wpc = [
@@ -165,16 +178,45 @@ class Application(tk.Frame):
             ""
         ]
 
-        print("DOWNLOADING ... ...")
+        loadText.configure(text="Getting WPC forecast graphics...")
+        about.update()
         getImageList(wpc, self.wpc)
-        getImageList(sat, self.sat)
-        getImageList(spc, self.spc)
-        getImageList(rad, self.rad)
-        getImageList(cpcShortRange, self.cpcShortRange)
-        getImageList(cpcLongRange, self.cpcLongRange)
-        getImageList(droughtOutlook, self.droughtOutlook)
-        getImageList(observations, self.observations)
 
+        loading.step(12)
+        loadText.configure(text="Getting satellite imagery...")
+        about.update()
+        getImageList(sat, self.sat)
+
+        loading.step(12)
+        loadText.configure(text="Getting SPC outlook graphics...")
+        about.update()
+        getImageList(spc, self.spc)
+
+        loading.step(12)
+        loadText.configure(text="Getting latest radar loop...")
+        about.update()
+        getImageList(rad, self.rad)
+
+        loading.step(12)
+        loadText.configure(text="Getting CPC short range outlook graphics...")
+        about.update()
+        getImageList(cpcShortRange, self.cpcShortRange)
+
+        loading.step(12)
+        loadText.configure(text="Getting CPC long range outlook graphics...")
+        about.update()
+        getImageList(cpcLongRange, self.cpcLongRange)
+
+        loading.step(12)
+        loadText.configure(text="Getting drought outlook graphics...")
+        about.update()
+        getImageList(droughtOutlook, self.droughtOutlook)
+
+        loading.step(12)
+        loadText.configure(text="Getting HPRCC observation maps...")
+        about.update()
+        getImageList(observations, self.observations)
+        
         textLinks = [
             'https://f1.weather.gov/product.php?site=NWS&issuedby=DY1&product=SWO',
             'https://f1.weather.gov/product.php?site=NWS&product=SWO&issuedby=DY2',
@@ -185,18 +227,28 @@ class Application(tk.Frame):
             'http://www.cpc.ncep.noaa.gov/products/predictions/long_range/fxus07.html',
             'http://www.cpc.ncep.noaa.gov/products/predictions/long_range/fxus05.html'
         ]
+        
+        loading.step(12)
+        loadText.configure(text="Getting text discussions...")
+        about.update()
 
         for link in textLinks:
             page = requests.get(link).text
-            bs = bshtml(page, "lxml")
+            bs = bshtml(page)
             self.text_prods.append(bs.pre.contents[0])
 
-        print("READY!")
+        loading.stop()
+
+        loadText.configure(text="Ready to go!")
+        b = ttk.Button(about, text="Close", command=about.destroy)
+        b.grid(row=12, column=0)
+        about.update()
 
     def create_widgets(self):
         """
         Builds main program
         """
+
         self.winfo_toplevel().title("Climate Desk")
         self.categories = ttk.Notebook(self)
         # Create tabs
@@ -267,14 +319,13 @@ class Application(tk.Frame):
                               command=root.destroy)
         self.quit.pack(side="bottom")
 
-        # Finish up by displaying about box
-        aboutBox()
-
     def showNewWxImage(self, container, image):
         self.panel.destroy()
         self.panel = tk.Label(container)
-        self.panel.configure(image=image)
-        self.panel.image = image
+        imgFile = Image.open(BytesIO(image))
+        img = ImageTk.PhotoImage(imgFile)
+        self.panel.configure(image=img)
+        self.panel.image = img
         self.panel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
     def createWpc(self, container):
@@ -301,8 +352,10 @@ class Application(tk.Frame):
 
         self.climPanel.destroy()
         self.climPanel = tk.Label(container)
-        self.climPanel.configure(image=image)
-        self.climPanel.image = image
+        imgFile = Image.open(BytesIO(image))
+        img = ImageTk.PhotoImage(imgFile)
+        self.climPanel.configure(image=img)
+        self.climPanel.image = img
         self.climPanel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
 root = tk.Tk()

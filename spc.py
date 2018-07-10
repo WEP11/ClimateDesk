@@ -1,4 +1,5 @@
 import tkinter as tk
+import cpc as cpc
 from tkinter import ttk
 from PIL import Image, ImageTk
 from tkinter.scrolledtext import ScrolledText
@@ -40,25 +41,10 @@ def showSpcOutlook(container, imageList, text_prods):
     d1f.add(d1h, text='Hail')
     d1f.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    panel1 = tk.Label(d1c)
-    panel1.configure(image=imageList[0])
-    panel1.image = imageList[0]
-    panel1.pack(side="bottom")
-
-    panel2 = tk.Label(d1t)
-    panel2.configure(image=imageList[1])
-    panel2.image = imageList[1]
-    panel2.pack(side="bottom")
-
-    panel3 = tk.Label(d1w)
-    panel3.configure(image=imageList[2])
-    panel3.image = imageList[2]
-    panel3.pack(side="bottom")
-
-    panel4 = tk.Label(d1h)
-    panel4.configure(image=imageList[3])
-    panel4.image = imageList[3]
-    panel4.pack(side="bottom")
+    panel1 = cpc.createImageFrame(d1c, imageList[0])
+    panel2 = cpc.createImageFrame(d1t, imageList[1])
+    panel3 = cpc.createImageFrame(d1w, imageList[2])
+    panel4 = cpc.createImageFrame(d1h, imageList[3])
 
     # DAY TWO ---------------
     d2f = ttk.Notebook(d2)
@@ -71,15 +57,8 @@ def showSpcOutlook(container, imageList, text_prods):
 
     d2f.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    panel5 = tk.Label(d2c)
-    panel5.configure(image=imageList[4])
-    panel5.image = imageList[4]
-    panel5.pack(side="bottom")
-
-    panel6 = tk.Label(d2p)
-    panel6.configure(image=imageList[5])
-    panel6.image = imageList[5]
-    panel6.pack(side="bottom")
+    panel5 = cpc.createImageFrame(d2c, imageList[4])
+    panel6 = cpc.createImageFrame(d2p, imageList[5])
 
     # DAY THREE ---------------
     d3f = ttk.Notebook(d3)
@@ -92,42 +71,16 @@ def showSpcOutlook(container, imageList, text_prods):
 
     d3f.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    panel5 = tk.Label(d3c)
-    panel5.configure(image=imageList[6])
-    panel5.image = imageList[6]
-    panel5.pack(side="bottom")
-
-    panel6 = tk.Label(d3p)
-    panel6.configure(image=imageList[7])
-    panel6.image = imageList[7]
-    panel6.pack(side="bottom")
+    panel5 = cpc.createImageFrame(d3c, imageList[6])
+    panel6 = cpc.createImageFrame(d3p, imageList[7])
 
     # DAY 4-8
 
-    panel7 = tk.Label(d4)
-    panel7.configure(image=imageList[8])
-    panel7.image = imageList[8]
-    panel7.pack(side="bottom")
-
-    panel8 = tk.Label(d5)
-    panel8.configure(image=imageList[9])
-    panel8.image = imageList[9]
-    panel8.pack(side="bottom")
-
-    panel9 = tk.Label(d6)
-    panel9.configure(image=imageList[10])
-    panel9.image = imageList[10]
-    panel9.pack(side="bottom")
-
-    panel10 = tk.Label(d7)
-    panel10.configure(image=imageList[11])
-    panel10.image = imageList[11]
-    panel10.pack(side="bottom")
-
-    panel11 = tk.Label(d8)
-    panel11.configure(image=imageList[12])
-    panel11.image = imageList[12]
-    panel11.pack(side="bottom")
+    panel7 = cpc.createImageFrame(d4, imageList[8])
+    panel8 = cpc.createImageFrame(d5, imageList[9])
+    panel9 = cpc.createImageFrame(d6, imageList[10])
+    panel10 = cpc.createImageFrame(d7, imageList[11])
+    panel11 = cpc.createImageFrame(d8, imageList[12])
 
     spcTextWindow(text_prods)
 
@@ -173,21 +126,10 @@ def showForecast(container, images):
     multipane.add(d3, text='Day 6')
     multipane.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    panel1 = tk.Label(d1)
-    panel1.configure(image=images[3])
-    panel1.image = images[3]
-    panel1.pack(side="bottom")
-
-    panel2 = tk.Label(d2)
-    panel2.configure(image=images[4])
-    panel2.image = images[4]
-    panel2.pack(side="bottom")
-
-    panel3 = tk.Label(d3)
-    panel3.configure(image=images[5])
-    panel3.image = images[5]
-    panel3.pack(side="bottom")
-
+    panel1 = cpc.createImageFrame(d1, images[3])
+    panel2 = cpc.createImageFrame(d2, images[4])
+    panel3 = cpc.createImageFrame(d3, images[5])
+    
     return multipane
 
 
