@@ -321,11 +321,7 @@ class Application(tk.Frame):
 
     def showNewWxImage(self, container, image):
         self.panel.destroy()
-        self.panel = tk.Label(container)
-        imgFile = Image.open(BytesIO(image))
-        img = ImageTk.PhotoImage(imgFile)
-        self.panel.configure(image=img)
-        self.panel.image = img
+        self.panel = cpc.createImageFrame(container, image, noShow=True)
         self.panel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
     def createWpc(self, container):
@@ -351,11 +347,7 @@ class Application(tk.Frame):
         """
 
         self.climPanel.destroy()
-        self.climPanel = tk.Label(container)
-        imgFile = Image.open(BytesIO(image))
-        img = ImageTk.PhotoImage(imgFile)
-        self.climPanel.configure(image=img)
-        self.climPanel.image = img
+        self.climPanel = cpc.createImageFrame(container, image, noShow=True)
         self.climPanel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
 root = tk.Tk()

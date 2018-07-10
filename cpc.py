@@ -9,13 +9,37 @@ from tkinter.scrolledtext import ScrolledText
 def callClimateReports():
     webbrowser.open_new_tab("https://www.ncdc.noaa.gov/sotc/")
 
-def createImageFrame(container, image):
-    frame = tk.Label(container)
+def createImageFrame(container, image, noShow=False):
+    # Open Image
     imgFile = Image.open(BytesIO(image))
-    img = ImageTk.PhotoImage(imgFile)
+    
+    # First calculate image size
+    #cWdt = container.winfo_width()
+    #cHgt = container.winfo_height()
+    cWdt = 1024.0
+    cHgt = 768.0
+    print(cWdt, cHgt)
+
+    iHgt = float(imgFile.size[1])
+    iWdt = float(imgFile.size[0])
+    print(iWdt, iHgt)
+    if iWdt > cWdt:
+        pct = (iWdt/cWdt) - 1.0
+        nWdt = int(iWdt - (iWdt * pct))
+        nHgt = int(iHgt - (iHgt * pct))
+    else:
+        nHgt = int(iHgt)
+        nWdt = int(iWdt)
+    print(nWdt, nHgt)
+    newImg = imgFile.resize((nWdt, nHgt))
+    img = ImageTk.PhotoImage(newImg)
+    
+    frame = tk.Label(container)
     frame.configure(image=img)
     frame.image = img
-    frame.pack(side="bottom")
+
+    if noShow is False:
+        frame.pack(side="bottom")
 
     return frame
 
