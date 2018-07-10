@@ -1,7 +1,8 @@
-# ClimateDesk
+# Climate Desk
 This is a side project that offers an easy to navigate dashboard for climate
 products. Right now it displays pre-prepared images with the ability to complement
 with discussion text.
+
 ![Alt text](/Screenshots/spcShot.png)
 
 For me this is just an exploration of Tkinter and GUI applications, but it also
