@@ -7,13 +7,15 @@ from io import BytesIO
 
 from tkinter.scrolledtext import ScrolledText
 
+
 def callClimateReports():
     webbrowser.open_new_tab("https://www.ncdc.noaa.gov/sotc/")
+
 
 def createImageFrame(container, image, noShow=False):
     # Open Image
     imgFile = Image.open(BytesIO(image))
-    
+
     # First calculate image size
     container.update_idletasks()
 
@@ -21,22 +23,23 @@ def createImageFrame(container, image, noShow=False):
     #cHgt = container.winfo_height()
     cWdt = 1024.0
     cHgt = 768.0
-    print(cWdt, cHgt)
+    #print(cWdt, cHgt)
 
     iHgt = float(imgFile.size[1])
     iWdt = float(imgFile.size[0])
-    print(iWdt, iHgt)
+    #print(iWdt, iHgt)
     if iWdt > cWdt:
-        pct = (iWdt/cWdt) - 1.0
-        nWdt = int(iWdt - (iWdt * pct))
+        pct = (iWdt - cWdt)/iWdt
+        #pct = (cWdt/iWdt) - 1.0
+        nWdt = int(cWdt)
         nHgt = int(iHgt - (iHgt * pct))
     else:
         nHgt = int(iHgt)
         nWdt = int(iWdt)
-    print(nWdt, nHgt)
+    #print(nWdt, nHgt)
     newImg = imgFile.resize((nWdt, nHgt))
     img = ImageTk.PhotoImage(newImg)
-    
+
     frame = tk.Label(container)
     frame.configure(image=img)
     frame.image = img
@@ -45,6 +48,7 @@ def createImageFrame(container, image, noShow=False):
         frame.pack(side="bottom")
 
     return frame
+
 
 def createCpcFrame(frame, idx, images):
     f = ttk.Notebook(frame)
@@ -58,7 +62,6 @@ def createCpcFrame(frame, idx, images):
 
     p1 = createImageFrame(ft, images[idx])
     p2 = createImageFrame(fp, images[idx+1])
-
 
 
 def cpcLrOutlook(container, images):
@@ -180,6 +183,7 @@ def hprccObs(container, images):
     l1 = ttk.Frame(multipane)
     l3 = ttk.Frame(multipane)
     l12 = ttk.Frame(multipane)
+    drought = ttk.Frame(multipane)
 
     multipane.add(d7, text="7 Day")
     multipane.add(d14, text="14 Day")
@@ -199,10 +203,32 @@ def hprccObs(container, images):
     multipane.add(l1, text="Last Month")
     multipane.add(l3, text="Last 3 Months")
     multipane.add(l12, text="Last 12 Months")
+    multipane.add(drought, text="Drought")
 
     multipane.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    createHprccFrame(d7, images)
+    # [d7, d14, d30, d60, d90, d120, m6, m12, m24, m36, grow, sumr, year, water, drought]
+    createHprccFrame(d7, images[0])
+    createHprccFrame(d14, images[1])
+    createHprccFrame(d30, images[2])
+    createHprccFrame(d60, images[3])
+    createHprccFrame(d90, images[4])
+    createHprccFrame(d120, images[5])
+    '''
+    createHprccFrame(m6, images[6])
+    createHprccFrame(m12, images[7])
+    createHprccFrame(m24, images[8])
+    createHprccFrame(m36, images[9])
+    createHprccFrame(grow, images[10])
+    createHprccFrame(sumr, images[11])
+    createHprccFrame(watr, images[13])
+    createHprccFrame(year, images[12])
+    createHprccFrame(mnth, images[0])
+    createHprccFrame(d7, images[0])
+    createHprccFrame(d7, images[0])
+    createHprccFrame(d7, images[0])
+    '''
+    droughtPane = createImageFrame(drought, images[14][0])
 
     return multipane
 
@@ -256,3 +282,40 @@ def showDiscussions(products):
 
     b = ttk.Button(window, text="Close", command=window.destroy)
     b.grid(row=1, column=0)
+
+
+def telecon(container, images):
+    f = ttk.Notebook(container)
+
+    ao = ttk.Frame(f)
+    nao = ttk.Frame(f)
+    pna = ttk.Frame(f)
+    aao = ttk.Frame(f)
+
+    f.add(ao, text="AO")
+    f.add(nao, text="NAO")
+    f.add(pna, text="PNA")
+    f.add(aao, text="AAO")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p1 = createImageFrame(ao, images[0], noShow=True)
+    p1.pack(side="left")
+    p2 = createImageFrame(ao, images[1], noShow=True)
+    p2.pack(side="left")
+
+    p3 = createImageFrame(nao, images[2], noShow=True)
+    p3.pack(side="left")
+    p4 = createImageFrame(nao, images[3], noShow=True)
+    p4.pack(side="left")
+
+    p5 = createImageFrame(pna, images[4], noShow=True)
+    p5.pack(side="left")
+    p6 = createImageFrame(pna, images[5], noShow=True)
+    p6.pack(side="left")
+
+    p7 = createImageFrame(aao, images[6], noShow=True)
+    p7.pack(side="left")
+    p8 = createImageFrame(aao, images[7], noShow=True)
+    p8.pack(side="left")
+
+    return f

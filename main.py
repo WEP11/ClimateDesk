@@ -6,8 +6,13 @@ from tkinter.scrolledtext import ScrolledText
 from io import BytesIO
 from bs4 import BeautifulSoup as bshtml
 
-import spc as spc
-import cpc as cpc
+import spc
+import cpc
+import resources
+
+headers = {
+    'User-Agent': 'Climate Desk 0.1'
+}
 
 
 def loadingBox(root):
@@ -23,17 +28,13 @@ def loadingBox(root):
 
     window = tk.Toplevel()
     window.wm_title("About Climate Desk")
-    # set the dimensions of the screen 
+    # set the dimensions of the screen
     # and where it is placed
     window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     info1 = tk.Label(window)
     info1.configure(text="Climate Desk", font='Helvetica 18 bold')
     info1.grid(row=1, column=0, padx=5, pady=5)
-
-    info2 = tk.Label(window)
-    info2.configure(text="(c)2018 Warren Pettee")
-    info2.grid(row=2, column=0)
 
     info4 = tk.Label(window)
     info4.configure(text="Climate Desk is a weather and climate data dashboard that aggregates products from across the public space.")
@@ -60,9 +61,6 @@ def loadingBox(root):
 
 
 def getImageList(links, imageList):
-    headers = {
-        'User-Agent': 'Climate Desk 0.1'
-    }
 
     for link in links:
         try:
@@ -72,6 +70,20 @@ def getImageList(links, imageList):
             imageList.append(response.content)
         except:
             print(link)
+
+
+def getHprccList(links, imageList):
+    for timescale in links:
+        timeList = []
+        for link in timescale:
+            try:
+                response = requests.get(link, headers=headers)
+                #imgFile = Image.open(BytesIO(response.content))
+                #img = ImageTk.PhotoImage(imgFile)
+                timeList.append(response.content)
+            except:
+                print(link)
+        imageList.append(timeList)
 
 
 class Application(tk.Frame):
@@ -88,7 +100,7 @@ class Application(tk.Frame):
         splash = self.downloadImages()
 
         self.root.deiconify()
-        self.root.state('zoomed')
+        self.root.state('normal')
         self.create_widgets(splash)
 
     def downloadImages(self):
@@ -99,161 +111,81 @@ class Application(tk.Frame):
         about, loading, loadText = loadingBox(self.root)
 
         self.wpc = []
-        wpc = [
-            "http://www.wpc.ncep.noaa.gov/noaa/noaad1.gif",
-            "http://www.wpc.ncep.noaa.gov/noaa/noaad2.gif",
-            "http://www.wpc.ncep.noaa.gov/noaa/noaad3.gif",
-            "http://www.wpc.ncep.noaa.gov/medr/9khwbg_conus.gif",
-            "http://www.wpc.ncep.noaa.gov/medr/9lhwbg_conus.gif",
-            "http://www.wpc.ncep.noaa.gov/medr/9mhwbg_conus.gif",
-            "http://www.wpc.ncep.noaa.gov/medr/9nhwbg_conus.gif"
-        ]
-
         self.sat = []
-        sat = [
-            "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/20181901632_GOES16-ABI-CONUS-GEOCOLOR-1250x750.jpg",
-            "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/07/20181901637_GOES16-ABI-CONUS-07-1250x750.jpg",
-            "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/09/20181901637_GOES16-ABI-CONUS-09-1250x750.jpg"
-        ]
-
         self.rad = []
-        rad = [
-            "https://radar.weather.gov/ridge/Conus/Loop/NatLoop.gif"
-        ]
-
         self.spc = []
-        spc = [
-            "https://www.spc.noaa.gov/products/outlook/day1otlk_prt.gif",
-            "https://www.spc.noaa.gov/products/outlook/day1probotlk_torn.gif",
-            "https://www.spc.noaa.gov/products/outlook/day1probotlk_wind.gif",
-            "https://www.spc.noaa.gov/products/outlook/day1probotlk_hail.gif",
-            "https://www.spc.noaa.gov/products/outlook/day2otlk_prt.gif",
-            "https://www.spc.noaa.gov/products/outlook/day2probotlk_any.gif",
-            "https://www.spc.noaa.gov/products/outlook/day3otlk_prt.gif",
-            "https://www.spc.noaa.gov/products/outlook/day3prob.gif",
-            "https://www.spc.noaa.gov/products/exper/day4-8/day4prob.gif",
-            "https://www.spc.noaa.gov/products/exper/day4-8/day5prob.gif",
-            "https://www.spc.noaa.gov/products/exper/day4-8/day6prob.gif",
-            "https://www.spc.noaa.gov/products/exper/day4-8/day7prob.gif",
-            "https://www.spc.noaa.gov/products/exper/day4-8/day8prob.gif"
-        ]
-
         self.cpcShortRange = []
-        cpcShortRange = [
-            "http://www.cpc.ncep.noaa.gov/products/predictions/610day/610temp.new.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/610day/610prcp.new.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/814day/814temp.new.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/814day/814prcp.new.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/30day/off15_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/30day/off15_prcp.gif"
-        ]
-
         self.droughtOutlook = []
-        droughtOutlook = [
-            "http://www.cpc.ncep.noaa.gov/products/expert_assessment/mdohomeweb.png",
-            "http://www.cpc.ncep.noaa.gov/products/expert_assessment/sdohomeweb.png"
-        ]
-
         self.cpcLongRange = []
-        cpcLongRange = [
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead01/off01_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead01/off01_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead02/off02_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead02/off02_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead03/off03_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead03/off03_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead04/off04_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead04/off04_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead05/off05_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead05/off05_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead06/off06_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead06/off06_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead07/off07_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead07/off07_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead08/off08_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead08/off08_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead09/off09_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead09/off09_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead10/off10_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead10/off10_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead11/off11_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead11/off11_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead12/off12_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead12/off12_prcp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead13/off13_temp.gif",
-            "http://www.cpc.ncep.noaa.gov/products/predictions/long_range/lead13/off13_prcp.gif"
-        ]
-
         self.observations = []
-        observations = [
-            "https://hprcc.unl.edu/products/maps/acis/7dPDataUS.png",
-            "https://hprcc.unl.edu/products/maps/acis/7dPDeptUS.png",
-            "https://hprcc.unl.edu/products/maps/acis/7dPNormUS.png",
-            "https://hprcc.unl.edu/products/maps/acis/7dTDataUS.png",
-            "https://hprcc.unl.edu/products/maps/acis/7dTDeptUS.png",
-            "https://hprcc.unl.edu/products/maps/acis/7dTMAXDataUS.png",
-            "https://hprcc.unl.edu/products/maps/acis/7dTMINDataUS.png",
-            ""
-        ]
+        self.ensoImg = []
+        self.mjoImg = []
+        self.teleconImg = []
+
+        nationalObs = resources.getHprccNatl()
 
         loadText.configure(text="Getting WPC forecast graphics...")
         about.update()
-        getImageList(wpc, self.wpc)
+        getImageList(resources.wpc, self.wpc)
 
         loading.step(12)
         loadText.configure(text="Getting satellite imagery...")
         about.update()
-        getImageList(sat, self.sat)
+        getImageList(resources.sat, self.sat)
 
         loading.step(12)
         loadText.configure(text="Getting SPC outlook graphics...")
         about.update()
-        getImageList(spc, self.spc)
+        getImageList(resources.spc, self.spc)
 
         loading.step(12)
         loadText.configure(text="Getting latest radar loop...")
         about.update()
-        getImageList(rad, self.rad)
+        getImageList(resources.rad, self.rad)
 
         loading.step(12)
         loadText.configure(text="Getting CPC short range outlook graphics...")
         about.update()
-        getImageList(cpcShortRange, self.cpcShortRange)
+        getImageList(resources.cpcShortRange, self.cpcShortRange)
 
         loading.step(12)
         loadText.configure(text="Getting CPC long range outlook graphics...")
         about.update()
-        getImageList(cpcLongRange, self.cpcLongRange)
+        getImageList(resources.cpcLongRange, self.cpcLongRange)
 
         loading.step(12)
         loadText.configure(text="Getting drought outlook graphics...")
         about.update()
-        getImageList(droughtOutlook, self.droughtOutlook)
+        getImageList(resources.droughtOutlook, self.droughtOutlook)
 
         loading.step(12)
         loadText.configure(text="Getting HPRCC observation maps...")
         about.update()
-        getImageList(observations, self.observations)
-        
-        textLinks = [
-            'https://f1.weather.gov/product.php?site=NWS&issuedby=DY1&product=SWO',
-            'https://f1.weather.gov/product.php?site=NWS&product=SWO&issuedby=DY2',
-            'https://f1.weather.gov/product.php?site=NWS&product=SWO&issuedby=DY3',
-            'https://f1.weather.gov/product.php?site=NWS&product=SWO&issuedby=D48',
-            'https://f1.weather.gov/product.php?site=NWS&product=SWO&issuedby=MCD',
-            'http://www.cpc.ncep.noaa.gov/products/predictions/610day/fxus06.html',
-            'http://www.cpc.ncep.noaa.gov/products/predictions/long_range/fxus07.html',
-            'http://www.cpc.ncep.noaa.gov/products/predictions/long_range/fxus05.html'
-        ]
-        
+        getHprccList(nationalObs, self.observations)
+
+        loading.step(12)
+        loadText.configure(text="Getting CPC ENSO Information...")
+        about.update()
+        getImageList(resources.enso, self.ensoImg)
+
+        loading.step(12)
+        loadText.configure(text="Getting CPC MJO Information...")
+        about.update()
+        getImageList(resources.mjo, self.mjoImg)
+
+        loading.step(12)
+        loadText.configure(text="Getting CPC Teleconnection Information...")
+        about.update()
+        getImageList(resources.telecon, self.teleconImg)
+
         loading.step(12)
         loadText.configure(text="Getting text discussions...")
         about.update()
 
-        for link in textLinks:
+        for link in resources.textLinks:
             page = requests.get(link).text
-            bs = bshtml(page)
-            self.text_prods.append(bs.pre.contents[0])
+            bs = bshtml(page, "lxml")
+            self.text_prods.append(bs.pre.contents)
 
         loading.stop()
 
@@ -269,12 +201,12 @@ class Application(tk.Frame):
         Builds main program
         """
         self.winfo_toplevel().title("Climate Desk")
-        self.categories = ttk.Notebook(self, width=self.root.winfo_width(), height=(self.root.winfo_height() - 50))
+        self.categories = ttk.Notebook(self)
         # Create tabs
-        nationalWx = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
-        nationalClimate = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
-        regionalClimate = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
-        internationalClimate = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
+        nationalWx = ttk.Frame(self.categories)
+        nationalClimate = ttk.Frame(self.categories)
+        regionalClimate = ttk.Frame(self.categories)
+        internationalClimate = ttk.Frame(self.categories)
 
         self.categories.add(nationalWx, text="National Weather")
         self.categories.add(nationalClimate, text="National Climate")
@@ -317,11 +249,10 @@ class Application(tk.Frame):
         outlook = tk.Button(nationalClimate, text="Short Range Outlook", command=lambda: self.createCpcOutlook(nationalClimate))
         lrOutlook = tk.Button(nationalClimate, text="Long Range Outlook", command=lambda: self.createCpcLrOutlook(nationalClimate))
         cpcDiscuss = tk.Button(nationalClimate, text="CPC Discussions", command=lambda: cpc.showDiscussions(self.text_prods))
-        enso = tk.Button(nationalClimate, text="ENSO")
+        enso = tk.Button(nationalClimate, text="ENSO", command=lambda: self.createEnso(nationalClimate))
         mjo = tk.Button(nationalClimate, text="MJO")
-        telecon = tk.Button(nationalClimate, text="Teleconnections")
+        telecon = tk.Button(nationalClimate, text="Teleconnections", command=lambda: self.createTelecon(nationalClimate))
         blocks = tk.Button(nationalClimate, text="Blocking")
-        tracks = tk.Button(nationalClimate, text="Storm Tracks")
 
         climateReport.grid(row=0, column=0, sticky='W')
         past.grid(row=1, column=0, sticky='W')
@@ -332,7 +263,6 @@ class Application(tk.Frame):
         mjo.grid(row=6, column=0, sticky='W')
         telecon.grid(row=7, column=0, sticky='W')
         blocks.grid(row=8, column=0, sticky='W')
-        tracks.grid(row=9, column=0, sticky='W')
         nationalClimate.update_idletasks()
 
         self.showNewClimImage(nationalClimate, self.cpcShortRange[0])
@@ -363,10 +293,18 @@ class Application(tk.Frame):
     def createCpcLrOutlook(self, container):
         self.climPanel.destroy()
         self.climPanel = cpc.cpcLrOutlook(container, self.cpcLongRange)
-    
+
     def createObservations(self, container):
         self.climPanel.destroy()
         self.climPanel = cpc.hprccObs(container, self.observations)
+
+    def createEnso(self, container):
+        self.climPanel.destroy()
+        self.climPanel = cpc.enso(container, self.ensoImg)
+
+    def createTelecon(self, container):
+        self.climPanel.destroy()
+        self.climPanel = cpc.telecon(container, self.teleconImg)
 
     def showNewClimImage(self, container, image):
         """
