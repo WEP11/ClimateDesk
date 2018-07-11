@@ -10,9 +10,22 @@ import spc as spc
 import cpc as cpc
 
 
-def loadingBox():
+def loadingBox(root):
+    # get screen width and height
+    ws = root.winfo_screenwidth() # width of the screen
+    hs = root.winfo_screenheight() # height of the screen
+
+    # calculate x and y coordinates for the Tk root window
+    w = 600
+    h = 200
+    x = (ws/2) - (w/2)
+    y = (hs/2) - (h/2)
+
     window = tk.Toplevel()
     window.wm_title("About Climate Desk")
+    # set the dimensions of the screen 
+    # and where it is placed
+    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     info1 = tk.Label(window)
     info1.configure(text="Climate Desk", font='Helvetica 18 bold')
@@ -64,21 +77,26 @@ def getImageList(links, imageList):
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+        self.root = master
+        self.root.withdraw()
+
         self.text_prods = []
         self.multipane = None
 
         self.pack()
 
-        self.downloadImages()
-        
-        self.create_widgets()
+        splash = self.downloadImages()
+
+        self.root.deiconify()
+        self.root.state('zoomed')
+        self.create_widgets(splash)
 
     def downloadImages(self):
         """
         Downloads all images. The images need to be referenced to the
         application to hide from the garbage collecter, so we do it all here.
         """
-        about, loading, loadText = loadingBox()
+        about, loading, loadText = loadingBox(self.root)
 
         self.wpc = []
         wpc = [
@@ -244,18 +262,19 @@ class Application(tk.Frame):
         b.grid(row=12, column=0)
         about.update()
 
-    def create_widgets(self):
+        return about
+
+    def create_widgets(self, about):
         """
         Builds main program
         """
-
         self.winfo_toplevel().title("Climate Desk")
-        self.categories = ttk.Notebook(self)
+        self.categories = ttk.Notebook(self, width=self.root.winfo_width(), height=(self.root.winfo_height() - 50))
         # Create tabs
-        nationalWx = ttk.Frame(self.categories)
-        nationalClimate = ttk.Frame(self.categories)
-        regionalClimate = ttk.Frame(self.categories)
-        internationalClimate = ttk.Frame(self.categories)
+        nationalWx = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
+        nationalClimate = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
+        regionalClimate = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
+        internationalClimate = ttk.Frame(self.categories, width=(self.categories.winfo_width() - 10), height=(self.categories.winfo_height() - 10))
 
         self.categories.add(nationalWx, text="National Weather")
         self.categories.add(nationalClimate, text="National Climate")
@@ -312,12 +331,15 @@ class Application(tk.Frame):
         telecon.grid(row=6, column=0, sticky='W')
         blocks.grid(row=7, column=0, sticky='W')
         tracks.grid(row=8, column=0, sticky='W')
+        nationalClimate.update_idletasks()
 
         self.showNewClimImage(nationalClimate, self.cpcShortRange[0])
 
         self.quit = tk.Button(self, text="Exit", fg="red",
                               command=root.destroy)
         self.quit.pack(side="bottom")
+
+        about.lift()
 
     def showNewWxImage(self, container, image):
         self.panel.destroy()
@@ -351,5 +373,7 @@ class Application(tk.Frame):
         self.climPanel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
 root = tk.Tk()
+
+# root.attributes('-fullscreen', True) # Very fullscreen
 app = Application(master=root)
 app.mainloop()

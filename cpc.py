@@ -14,6 +14,8 @@ def createImageFrame(container, image, noShow=False):
     imgFile = Image.open(BytesIO(image))
     
     # First calculate image size
+    container.update_idletasks()
+
     #cWdt = container.winfo_width()
     #cHgt = container.winfo_height()
     cWdt = 1024.0
