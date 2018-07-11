@@ -313,9 +313,10 @@ class Application(tk.Frame):
         self.climPanel = tk.Label(nationalClimate) # Make product panel
 
         climateReport = tk.Button(nationalClimate, text="Climate Reports (link)", command=cpc.callClimateReports)
-        past = tk.Button(nationalClimate, text="Observations")
+        past = tk.Button(nationalClimate, text="Observations", command=lambda: self.createObservations(nationalClimate))
         outlook = tk.Button(nationalClimate, text="Short Range Outlook", command=lambda: self.createCpcOutlook(nationalClimate))
         lrOutlook = tk.Button(nationalClimate, text="Long Range Outlook", command=lambda: self.createCpcLrOutlook(nationalClimate))
+        cpcDiscuss = tk.Button(nationalClimate, text="CPC Discussions", command=lambda: cpc.showDiscussions(self.text_prods))
         enso = tk.Button(nationalClimate, text="ENSO")
         mjo = tk.Button(nationalClimate, text="MJO")
         telecon = tk.Button(nationalClimate, text="Teleconnections")
@@ -326,11 +327,12 @@ class Application(tk.Frame):
         past.grid(row=1, column=0, sticky='W')
         outlook.grid(row=2, column=0, sticky='W')
         lrOutlook.grid(row=3, column=0, sticky='W')
-        enso.grid(row=4, column=0, sticky='W')
-        mjo.grid(row=5, column=0, sticky='W')
-        telecon.grid(row=6, column=0, sticky='W')
-        blocks.grid(row=7, column=0, sticky='W')
-        tracks.grid(row=8, column=0, sticky='W')
+        cpcDiscuss.grid(row=4, column=0, sticky='W')
+        enso.grid(row=5, column=0, sticky='W')
+        mjo.grid(row=6, column=0, sticky='W')
+        telecon.grid(row=7, column=0, sticky='W')
+        blocks.grid(row=8, column=0, sticky='W')
+        tracks.grid(row=9, column=0, sticky='W')
         nationalClimate.update_idletasks()
 
         self.showNewClimImage(nationalClimate, self.cpcShortRange[0])
@@ -361,6 +363,10 @@ class Application(tk.Frame):
     def createCpcLrOutlook(self, container):
         self.climPanel.destroy()
         self.climPanel = cpc.cpcLrOutlook(container, self.cpcLongRange)
+    
+    def createObservations(self, container):
+        self.climPanel.destroy()
+        self.climPanel = cpc.hprccObs(container, self.observations)
 
     def showNewClimImage(self, container, image):
         """

@@ -1,5 +1,6 @@
 import webbrowser
 import tkinter as tk
+import spc as spc
 from tkinter import ttk
 from PIL import Image, ImageTk
 from io import BytesIO
@@ -157,3 +158,101 @@ def cpcOutlook(container, images, droughtImages):
     f4p2 = createImageFrame(f4seas, droughtImages[1])
 
     return multipane
+
+def hprccObs(container, images):
+    multipane = ttk.Notebook(container)
+
+    d7 = ttk.Frame(multipane)
+    d14 = ttk.Frame(multipane)
+    d30 = ttk.Frame(multipane)
+    d60 = ttk.Frame(multipane)
+    d90 = ttk.Frame(multipane)
+    d120 = ttk.Frame(multipane)
+    m6 = ttk.Frame(multipane)
+    m12 = ttk.Frame(multipane)
+    m24 = ttk.Frame(multipane)
+    m36 = ttk.Frame(multipane)
+    grow = ttk.Frame(multipane)
+    sumr = ttk.Frame(multipane)
+    watr = ttk.Frame(multipane)
+    year = ttk.Frame(multipane)
+    mnth = ttk.Frame(multipane)
+    l1 = ttk.Frame(multipane)
+    l3 = ttk.Frame(multipane)
+    l12 = ttk.Frame(multipane)
+
+    multipane.add(d7, text="7 Day")
+    multipane.add(d14, text="14 Day")
+    multipane.add(d30, text="30 Day")
+    multipane.add(d60, text="60 Day")
+    multipane.add(d90, text="90 Day")
+    multipane.add(d120, text="120 Day")
+    multipane.add(m6, text="6 Month")
+    multipane.add(m12, text="12 Month")
+    multipane.add(m24, text="24 Month")
+    multipane.add(m36, text="36 Month")
+    multipane.add(grow, text="Apr 1")
+    multipane.add(sumr, text="Jul 1")
+    multipane.add(watr, text="Oct 1")
+    multipane.add(year, text="Annual")
+    multipane.add(mnth, text="Month")
+    multipane.add(l1, text="Last Month")
+    multipane.add(l3, text="Last 3 Months")
+    multipane.add(l12, text="Last 12 Months")
+
+    multipane.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    createHprccFrame(d7, images)
+
+    return multipane
+
+def createHprccFrame(container, images):
+    f = ttk.Notebook(container)
+
+    p = ttk.Frame(f)
+    p_d = ttk.Frame(f)
+    p_n = ttk.Frame(f)
+    t = ttk.Frame(f)
+    t_d = ttk.Frame(f)
+    tx = ttk.Frame(f)
+    tn = ttk.Frame(f)
+
+    f.add(p, text='Precipitation')
+    f.add(p_d, text='Dept from Normal Precip')
+    f.add(p_n, text='Pct of Normal Precip')
+    f.add(t, text='Temperature')
+    f.add(t_d, text='Dept from Normal Temp')
+    f.add(tx, text='Max Temperature')
+    f.add(tn, text='Min Temperature')
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p1 = createImageFrame(p, images[0])
+    p2 = createImageFrame(p_d, images[1])
+    p3 = createImageFrame(p_n, images[2])
+    p4 = createImageFrame(t, images[3])
+    p5 = createImageFrame(t_d, images[4])
+    p6 = createImageFrame(tx, images[5])
+    p7 = createImageFrame(tn, images[6])
+
+def showDiscussions(products):
+    window = tk.Toplevel()
+    window.wm_title("CPC DISCUSSION TEXT")
+
+    canvas = ttk.Notebook(window)
+
+    d1 = ttk.Frame(canvas)
+    d2 = ttk.Frame(canvas)
+    d3 = ttk.Frame(canvas)
+
+    canvas.add(d1, text='Short Term')
+    canvas.add(d2, text='30 Day')
+    canvas.add(d3, text='Long Range')
+
+    canvas.grid(row=0, column=0, rowspan=20, columnspan=10, padx=5, pady=5)
+
+    spc.drawTextScroll(d1, products[5])
+    spc.drawTextScroll(d2, products[6])
+    spc.drawTextScroll(d3, products[7])
+
+    b = ttk.Button(window, text="Close", command=window.destroy)
+    b.grid(row=1, column=0)
