@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup as bshtml
 import spc
 import cpc
 import resources
+import intl
 
 headers = {
     'User-Agent': 'Climate Desk 0.1'
@@ -86,6 +87,21 @@ def getHprccList(links, imageList):
         imageList.append(timeList)
 
 
+def getIntlImageList(links, imageList):
+    for region in links:
+        regionList = []
+        for time in region:
+            timeList = []
+            for link in time:
+                try:
+                    response = requests.get(link, headers=headers)
+                    timeList.append(response.content)
+                except:
+                    print(link)
+            regionList.append(timeList)
+        imageList.append(regionList)
+
+
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -121,8 +137,10 @@ class Application(tk.Frame):
         self.ensoImg = []
         self.mjoImg = []
         self.teleconImg = []
+        self.intl = []
 
         nationalObs = resources.getHprccNatl()
+        globalObs = resources.getIntlMaps()
 
         loadText.configure(text="Getting WPC forecast graphics...")
         about.update()
@@ -177,6 +195,11 @@ class Application(tk.Frame):
         loadText.configure(text="Getting CPC Teleconnection Information...")
         about.update()
         getImageList(resources.telecon, self.teleconImg)
+
+        loading.step(12)
+        loadText.configure(text="Getting CPC Global Climate Maps... (This will take a minute)")
+        about.update()
+        getIntlImageList(globalObs, self.intl)
 
         loading.step(12)
         loadText.configure(text="Getting text discussions...")
@@ -267,6 +290,30 @@ class Application(tk.Frame):
 
         self.showNewClimImage(nationalClimate, self.cpcShortRange[0])
 
+        # International Panel
+        self.intlPanel = tk.Label(internationalClimate)
+
+        africa = tk.Button(internationalClimate, text="Africa", command=lambda: self.createAfrica(internationalClimate))
+        asia = tk.Button(internationalClimate, text="Asia", command=lambda: self.createAsia(internationalClimate))
+        australia = tk.Button(internationalClimate, text="Australia", command=lambda: self.createAustralia(internationalClimate))
+        canada = tk.Button(internationalClimate, text="Canada", command=lambda: self.createCanada(internationalClimate))
+        europe = tk.Button(internationalClimate, text="Europe", command=lambda: self.createEurope(internationalClimate))
+        caucas = tk.Button(internationalClimate, text="Black Sea", command=lambda: self.createCaucas(internationalClimate))
+        mexico = tk.Button(internationalClimate, text="Mexico", command=lambda: self.createMexico(internationalClimate))
+        mideast = tk.Button(internationalClimate, text="Middle East", command=lambda: self.createMideast(internationalClimate))
+        southAmerica = tk.Button(internationalClimate, text="South America", command=lambda: self.createSouthAmerica(internationalClimate))
+
+        africa.grid(row=0, column=0, sticky='W')
+        asia.grid(row=1, column=0, sticky='W')
+        australia.grid(row=2, column=0, sticky='W')
+        canada.grid(row=3, column=0, sticky='W')
+        europe.grid(row=4, column=0, sticky='W')
+        caucas.grid(row=5, column=0, sticky='W')
+        mexico.grid(row=6, column=0, sticky='W')
+        mideast.grid(row=7, column=0, sticky='W')
+        southAmerica.grid(row=8, column=0, sticky='W')
+        internationalClimate.update_idletasks()
+
         self.quit = tk.Button(self, text="Exit", fg="red",
                               command=root.destroy)
         self.quit.pack(side="bottom")
@@ -305,6 +352,42 @@ class Application(tk.Frame):
     def createTelecon(self, container):
         self.climPanel.destroy()
         self.climPanel = cpc.telecon(container, self.teleconImg)
+
+    def createAfrica(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.africa(container, self.intl)
+
+    def createAsia(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.asia(container, self.intl)
+
+    def createAustralia(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.australia(container, self.intl)
+
+    def createCanada(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.canada(container, self.intl)
+
+    def createEurope(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.europe(container, self.intl)
+
+    def createCaucas(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.caucas(container, self.intl)
+
+    def createMexico(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.mexico(container, self.intl)
+
+    def createMideast(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.mideast(container, self.intl)
+
+    def createSouthAmerica(self, container):
+        self.intlPanel.destroy()
+        self.intlPanel = intl.southAmerica(container, self.intl)
 
     def showNewClimImage(self, container, image):
         """
