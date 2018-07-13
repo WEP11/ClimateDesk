@@ -9,34 +9,36 @@ from tkinter.scrolledtext import ScrolledText
 
 
 def callClimateReports():
+    """Opens NCEI climate reports in the default browser"""
     webbrowser.open_new_tab("https://www.ncdc.noaa.gov/sotc/")
 
 
 def createImageFrame(container, image, noShow=False):
+    """Creates an image within a parent container"""
     # Open Image
     imgFile = Image.open(BytesIO(image))
 
     # First calculate image size
     container.update_idletasks()
 
-    #cWdt = container.winfo_width()
-    #cHgt = container.winfo_height()
+    # cWdt = container.winfo_width()
+    # cHgt = container.winfo_height()
     cWdt = 1024.0
     cHgt = 768.0
-    #print(cWdt, cHgt)
+    # print(cWdt, cHgt)
 
     iHgt = float(imgFile.size[1])
     iWdt = float(imgFile.size[0])
-    #print(iWdt, iHgt)
+    # print(iWdt, iHgt)
     if iWdt > cWdt:
         pct = (iWdt - cWdt)/iWdt
-        #pct = (cWdt/iWdt) - 1.0
+        # pct = (cWdt/iWdt) - 1.0
         nWdt = int(cWdt)
         nHgt = int(iHgt - (iHgt * pct))
     else:
         nHgt = int(iHgt)
         nWdt = int(iWdt)
-    #print(nWdt, nHgt)
+    # print(nWdt, nHgt)
     newImg = imgFile.resize((nWdt, nHgt))
     img = ImageTk.PhotoImage(newImg)
 
@@ -51,6 +53,7 @@ def createImageFrame(container, image, noShow=False):
 
 
 def createCpcFrame(frame, idx, images):
+    """Creates a tabbed CPC outlook container within a parent container"""
     f = ttk.Notebook(frame)
 
     ft = ttk.Frame(f)
@@ -65,6 +68,10 @@ def createCpcFrame(frame, idx, images):
 
 
 def cpcLrOutlook(container, images):
+    """
+    Creates a tabbed CPC long range outlook container
+    within a parent container
+    """
     multipane = ttk.Notebook(container)
 
     f1 = ttk.Frame(multipane)
@@ -113,18 +120,9 @@ def cpcLrOutlook(container, images):
 
     return multipane
 
-def currentConditions(panel, container, images):
-    panel.grid_forget()
-    multipane = ttk.Notebook(container)
-
-    d7 = ttk.Frame(multipane)
-
-    multipane.add(d7, text='30 Day')
-    multipane.grid(row=0, column=1, rowspan=20, columnspan=10)
-
-
 
 def cpcOutlook(container, images, droughtImages):
+    """Creates a CPC and drought outlook container within a parent container"""
     multipane = ttk.Notebook(container)
 
     day610 = ttk.Frame(multipane)
@@ -162,7 +160,11 @@ def cpcOutlook(container, images, droughtImages):
 
     return multipane
 
+
 def hprccObs(container, images):
+    """
+    Creates a tabbed HPRCC climate map container within a parent container.
+    """
     multipane = ttk.Notebook(container)
 
     d7 = ttk.Frame(multipane)
@@ -207,7 +209,6 @@ def hprccObs(container, images):
 
     multipane.grid(row=0, column=1, rowspan=20, columnspan=10)
 
-    # [d7, d14, d30, d60, d90, d120, m6, m12, m24, m36, grow, sumr, year, water, drought]
     createHprccFrame(d7, images[0])
     createHprccFrame(d14, images[1])
     createHprccFrame(d30, images[2])
@@ -232,7 +233,11 @@ def hprccObs(container, images):
 
     return multipane
 
+
 def createHprccFrame(container, images):
+    """
+    Creates a tabbed HPRCC product frame for a parent HPRCC timescale frame
+    """
     f = ttk.Notebook(container)
 
     p = ttk.Frame(f)
@@ -260,7 +265,11 @@ def createHprccFrame(container, images):
     p6 = createImageFrame(tx, images[5])
     p7 = createImageFrame(tn, images[6])
 
+
 def showDiscussions(products):
+    """
+    Creates a window with a scrolling text view of the CPC discussions.
+    """
     window = tk.Toplevel()
     window.wm_title("CPC DISCUSSION TEXT")
 
@@ -285,6 +294,9 @@ def showDiscussions(products):
 
 
 def telecon(container, images):
+    """
+    Creates a tabbed container with the CPC teleconnection outlooks
+    """
     f = ttk.Notebook(container)
 
     ao = ttk.Frame(f)

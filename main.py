@@ -17,9 +17,10 @@ headers = {
 
 
 def loadingBox(root):
+    """This creates the main loading dialog"""
     # get screen width and height
-    ws = root.winfo_screenwidth() # width of the screen
-    hs = root.winfo_screenheight() # height of the screen
+    ws = root.winfo_screenwidth()  # width of the screen
+    hs = root.winfo_screenheight()  # height of the screen
 
     # calculate x and y coordinates for the Tk root window
     w = 600
@@ -38,7 +39,8 @@ def loadingBox(root):
     info1.grid(row=1, column=0, padx=5, pady=5)
 
     info4 = tk.Label(window)
-    info4.configure(text="Climate Desk is a weather and climate data dashboard that aggregates products from across the public space.")
+    info4.configure(text="Climate Desk is a weather and climate data dashboard\
+that aggregates products the public space.")
     info4.grid(row=3, column=0)
 
     info4 = tk.Label(window)
@@ -50,37 +52,43 @@ def loadingBox(root):
     loading.start()
     loadingState = tk.Label(window)
     loadingState.configure(text="LOADING")
-    loadingState.grid(row=9, column=0,padx=3, pady=5)
-    #b = ttk.Button(window, text="Close", command=window.destroy)
-    #b.grid(row=7, column=0)
+    loadingState.grid(row=9, column=0, padx=3, pady=5)
+    # b = ttk.Button(window, text="Close", command=window.destroy)
+    # b.grid(row=7, column=0)
 
     window.lift()
     window.update()
-
 
     return window, loading, loadingState
 
 
 def getImageList(links, imageList):
-
+    """
+    This downloads images from a given link list and appends them to an
+    image data list.
+    """
     for link in links:
         try:
             response = requests.get(link, headers=headers)
-            #imgFile = Image.open(BytesIO(response.content))
-            #img = ImageTk.PhotoImage(imgFile)
+            # imgFile = Image.open(BytesIO(response.content))
+            # img = ImageTk.PhotoImage(imgFile)
             imageList.append(response.content)
         except:
             print(link)
 
 
 def getHprccList(links, imageList):
+    """
+    This handles downloading the multiple products and timescales from
+    HPRCC links and saves them to an image data list.
+    """
     for timescale in links:
         timeList = []
         for link in timescale:
             try:
                 response = requests.get(link, headers=headers)
-                #imgFile = Image.open(BytesIO(response.content))
-                #img = ImageTk.PhotoImage(imgFile)
+                # imgFile = Image.open(BytesIO(response.content))
+                # img = ImageTk.PhotoImage(imgFile)
                 timeList.append(response.content)
             except:
                 print(link)
@@ -88,6 +96,10 @@ def getHprccList(links, imageList):
 
 
 def getIntlImageList(links, imageList):
+    """
+    This handles downloading the multiple products and timescales from
+    the CPC international map links and saves them to an image data list
+    """
     for region in links:
         regionList = []
         for time in region:
@@ -103,7 +115,13 @@ def getIntlImageList(links, imageList):
 
 
 class Application(tk.Frame):
+    """
+    This is the main application class. Primarily coordinating functions
+    surrounding the main application window.
+    """
+
     def __init__(self, master=None):
+        """Initializes the application"""
         super().__init__(master)
         self.root = master
         self.root.withdraw()
@@ -197,7 +215,8 @@ class Application(tk.Frame):
         getImageList(resources.telecon, self.teleconImg)
 
         loading.step(12)
-        loadText.configure(text="Getting CPC Global Climate Maps... (This will take a minute)")
+        loadText.configure(text="Getting CPC Global Climate Maps... (This will\
+                                 take a minute)")
         about.update()
         getIntlImageList(globalObs, self.intl)
 
@@ -240,17 +259,33 @@ class Application(tk.Frame):
         # National Weather Panel
         self.panel = tk.Label(nationalWx)
 
-        natlMap1 = tk.Button(nationalWx, text="Forecast Day 1", command=lambda: self.showNewWxImage(nationalWx, self.wpc[0]))
-        natlMap2 = tk.Button(nationalWx, text="Forecast Day 2", command=lambda: self.showNewWxImage(nationalWx, self.wpc[1]))
-        natlMap3 = tk.Button(nationalWx, text="Forecast Day 3", command=lambda: self.showNewWxImage(nationalWx, self.wpc[2]))
-        natlForc = tk.Button(nationalWx, text="Day 3-7 Forecast", command=lambda: self.createWpc(nationalWx))
+        natlMap1 = tk.Button(nationalWx, text="Forecast Day 1",
+                             command=lambda: self.showNewWxImage(nationalWx,
+                                                                 self.wpc[0]))
+        natlMap2 = tk.Button(nationalWx, text="Forecast Day 2",
+                             command=lambda: self.showNewWxImage(nationalWx,
+                                                                 self.wpc[1]))
+        natlMap3 = tk.Button(nationalWx, text="Forecast Day 3",
+                             command=lambda: self.showNewWxImage(nationalWx,
+                                                                 self.wpc[2]))
+        natlForc = tk.Button(nationalWx, text="Day 3-7 Forecast",
+                             command=lambda: self.createWpc(nationalWx))
 
-        natlVis = tk.Button(nationalWx, text="Visible Satellite", command=lambda: self.showNewWxImage(nationalWx, self.sat[0]))
-        natlIR = tk.Button(nationalWx, text="Infrared Satellite", command=lambda: self.showNewWxImage(nationalWx, self.sat[1]))
-        natlWV = tk.Button(nationalWx, text="Water Vapor Satellite", command=lambda: self.showNewWxImage(nationalWx, self.sat[2]))
+        natlVis = tk.Button(nationalWx, text="Visible Satellite",
+                            command=lambda: self.showNewWxImage(nationalWx,
+                                                                self.sat[0]))
+        natlIR = tk.Button(nationalWx, text="Infrared Satellite",
+                           command=lambda: self.showNewWxImage(nationalWx,
+                                                               self.sat[1]))
+        natlWV = tk.Button(nationalWx, text="Water Vapor Satellite",
+                           command=lambda: self.showNewWxImage(nationalWx,
+                                                               self.sat[2]))
 
-        natlSpc = tk.Button(nationalWx, text="SPC Outlooks", command=lambda: self.createSpc(nationalWx))
-        natlRad = tk.Button(nationalWx, text="Radar", command=lambda: self.showNewWxImage(nationalWx, self.rad[0]))
+        natlSpc = tk.Button(nationalWx, text="SPC Outlooks",
+                            command=lambda: self.createSpc(nationalWx))
+        natlRad = tk.Button(nationalWx, text="Radar",
+                            command=lambda: self.showNewWxImage(nationalWx,
+                                                                self.rad[0]))
 
         natlMap1.grid(row=0, column=0, sticky='W')
         natlMap2.grid(row=1, column=0, sticky='W')
@@ -265,16 +300,37 @@ class Application(tk.Frame):
         self.showNewWxImage(nationalWx, self.wpc[0])
 
         # National Climate Panel
-        self.climPanel = tk.Label(nationalClimate) # Make product panel
+        self.climPanel = tk.Label(nationalClimate)  # Make product panel
 
-        climateReport = tk.Button(nationalClimate, text="Climate Reports (link)", command=cpc.callClimateReports)
-        past = tk.Button(nationalClimate, text="Observations", command=lambda: self.createObservations(nationalClimate))
-        outlook = tk.Button(nationalClimate, text="Short Range Outlook", command=lambda: self.createCpcOutlook(nationalClimate))
-        lrOutlook = tk.Button(nationalClimate, text="Long Range Outlook", command=lambda: self.createCpcLrOutlook(nationalClimate))
-        cpcDiscuss = tk.Button(nationalClimate, text="CPC Discussions", command=lambda: cpc.showDiscussions(self.text_prods))
-        enso = tk.Button(nationalClimate, text="ENSO", command=lambda: self.createEnso(nationalClimate))
+        climateReport = tk.Button(nationalClimate,
+                                  text="Climate Reports (link)",
+                                  command=cpc.callClimateReports)
+
+        past = tk.Button(nationalClimate, text="Observations",
+                         command=lambda:
+                         self.createObservations(nationalClimate))
+
+        outlook = tk.Button(nationalClimate, text="Short Range Outlook",
+                            command=lambda:
+                            self.createCpcOutlook(nationalClimate))
+
+        lrOutlook = tk.Button(nationalClimate, text="Long Range Outlook",
+                              command=lambda:
+                              self.createCpcLrOutlook(nationalClimate))
+
+        cpcDiscuss = tk.Button(nationalClimate, text="CPC Discussions",
+                               command=lambda:
+                               cpc.showDiscussions(self.text_prods))
+
+        enso = tk.Button(nationalClimate, text="ENSO",
+                         command=lambda: self.createEnso(nationalClimate))
+
         mjo = tk.Button(nationalClimate, text="MJO")
-        telecon = tk.Button(nationalClimate, text="Teleconnections", command=lambda: self.createTelecon(nationalClimate))
+
+        telecon = tk.Button(nationalClimate, text="Teleconnections",
+                            command=lambda:
+                            self.createTelecon(nationalClimate))
+
         blocks = tk.Button(nationalClimate, text="Blocking")
 
         climateReport.grid(row=0, column=0, sticky='W')
@@ -293,15 +349,40 @@ class Application(tk.Frame):
         # International Panel
         self.intlPanel = tk.Label(internationalClimate)
 
-        africa = tk.Button(internationalClimate, text="Africa", command=lambda: self.createAfrica(internationalClimate))
-        asia = tk.Button(internationalClimate, text="Asia", command=lambda: self.createAsia(internationalClimate))
-        australia = tk.Button(internationalClimate, text="Australia", command=lambda: self.createAustralia(internationalClimate))
-        canada = tk.Button(internationalClimate, text="Canada", command=lambda: self.createCanada(internationalClimate))
-        europe = tk.Button(internationalClimate, text="Europe", command=lambda: self.createEurope(internationalClimate))
-        caucas = tk.Button(internationalClimate, text="Black Sea", command=lambda: self.createCaucas(internationalClimate))
-        mexico = tk.Button(internationalClimate, text="Mexico", command=lambda: self.createMexico(internationalClimate))
-        mideast = tk.Button(internationalClimate, text="Middle East", command=lambda: self.createMideast(internationalClimate))
-        southAmerica = tk.Button(internationalClimate, text="South America", command=lambda: self.createSouthAmerica(internationalClimate))
+        africa = tk.Button(internationalClimate, text="Africa",
+                           command=lambda:
+                           self.createAfrica(internationalClimate))
+
+        asia = tk.Button(internationalClimate, text="Asia",
+                         command=lambda: self.createAsia(internationalClimate))
+
+        australia = tk.Button(internationalClimate, text="Australia",
+                              command=lambda:
+                              self.createAustralia(internationalClimate))
+
+        canada = tk.Button(internationalClimate, text="Canada",
+                           command=lambda:
+                           self.createCanada(internationalClimate))
+
+        europe = tk.Button(internationalClimate, text="Europe",
+                           command=lambda:
+                           self.createEurope(internationalClimate))
+
+        caucas = tk.Button(internationalClimate, text="Black Sea",
+                           command=lambda:
+                           self.createCaucas(internationalClimate))
+
+        mexico = tk.Button(internationalClimate, text="Mexico",
+                           command=lambda:
+                           self.createMexico(internationalClimate))
+
+        mideast = tk.Button(internationalClimate, text="Middle East",
+                            command=lambda:
+                            self.createMideast(internationalClimate))
+
+        southAmerica = tk.Button(internationalClimate, text="South America",
+                                 command=lambda:
+                                 self.createSouthAmerica(internationalClimate))
 
         africa.grid(row=0, column=0, sticky='W')
         asia.grid(row=1, column=0, sticky='W')
@@ -321,71 +402,89 @@ class Application(tk.Frame):
         about.lift()
 
     def showNewWxImage(self, container, image):
+        """Generic function to show an image in the weather pane"""
         self.panel.destroy()
         self.panel = cpc.createImageFrame(container, image, noShow=True)
         self.panel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
     def createWpc(self, container):
+        """Helper function to show the WPC forecast images"""
         self.panel.destroy()
         self.panel = spc.showForecast(container, self.wpc)
 
     def createSpc(self, container):
+        """Helper function to show the SPC outlook images"""
         self.panel.destroy()
         self.panel = spc.showSpcOutlook(container, self.spc, self.text_prods)
 
     def createCpcOutlook(self, container):
+        """Helper function to show the CPC outlook images"""
         self.climPanel.destroy()
-        self.climPanel = cpc.cpcOutlook(container, self.cpcShortRange, self.droughtOutlook)
+        self.climPanel = cpc.cpcOutlook(container, self.cpcShortRange,
+                                        self.droughtOutlook)
 
     def createCpcLrOutlook(self, container):
+        """Helper function to show the CPC long range outlook images"""
         self.climPanel.destroy()
         self.climPanel = cpc.cpcLrOutlook(container, self.cpcLongRange)
 
     def createObservations(self, container):
+        """Helper function to show the HPRCC observation images"""
         self.climPanel.destroy()
         self.climPanel = cpc.hprccObs(container, self.observations)
 
     def createEnso(self, container):
+        """Helper function to show the CPC ENSO images"""
         self.climPanel.destroy()
         self.climPanel = cpc.enso(container, self.ensoImg)
 
     def createTelecon(self, container):
+        """Helper function to show the CPC teleconnection images"""
         self.climPanel.destroy()
         self.climPanel = cpc.telecon(container, self.teleconImg)
 
     def createAfrica(self, container):
+        """Helper function to show the Africa products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.africa(container, self.intl)
 
     def createAsia(self, container):
+        """Helper function to show the Asia products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.asia(container, self.intl)
 
     def createAustralia(self, container):
+        """Helper function to show the Australia products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.australia(container, self.intl)
 
     def createCanada(self, container):
+        """Helper function to show the Canada products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.canada(container, self.intl)
 
     def createEurope(self, container):
+        """Helper function to show the Europe products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.europe(container, self.intl)
 
     def createCaucas(self, container):
+        """Helper function to show the East Europe products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.caucas(container, self.intl)
 
     def createMexico(self, container):
+        """Helper function to show the Mexico products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.mexico(container, self.intl)
 
     def createMideast(self, container):
+        """Helper function to show the Middle East products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.mideast(container, self.intl)
 
     def createSouthAmerica(self, container):
+        """Helper function to show the South American products"""
         self.intlPanel.destroy()
         self.intlPanel = intl.southAmerica(container, self.intl)
 
@@ -399,6 +498,8 @@ class Application(tk.Frame):
         self.climPanel = cpc.createImageFrame(container, image, noShow=True)
         self.climPanel.grid(row=0, column=1, rowspan=20, columnspan=10)
 
+
+""" Start Application """
 root = tk.Tk()
 
 # root.attributes('-fullscreen', True) # Very fullscreen

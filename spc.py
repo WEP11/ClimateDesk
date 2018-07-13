@@ -6,6 +6,7 @@ from tkinter.scrolledtext import ScrolledText
 
 
 def showSpcOutlook(container, imageList, text_prods):
+    """ Shows the tabbed SPC Outlook within a parent container"""
     multipane = ttk.Notebook(container)
 
     d1 = ttk.Frame(multipane)
@@ -88,6 +89,7 @@ def showSpcOutlook(container, imageList, text_prods):
 
 
 def spcTextWindow(product_list):
+    """Shows the SPC discussion text within a tabbed window"""
     window = tk.Toplevel()
     window.wm_title("SPC DISCUSSION TEXT")
 
@@ -115,6 +117,7 @@ def spcTextWindow(product_list):
 
 
 def showForecast(container, images):
+    """Shows the tabbed WPC forecast within a parent container"""
     multipane = ttk.Notebook(container)
 
     d1 = ttk.Frame(multipane)
@@ -129,11 +132,12 @@ def showForecast(container, images):
     panel1 = cpc.createImageFrame(d1, images[3])
     panel2 = cpc.createImageFrame(d2, images[4])
     panel3 = cpc.createImageFrame(d3, images[5])
-    
+
     return multipane
 
 
 def drawTextScroll(parent, text):
+        """Draws a scrolled text box within a parent container"""
         l = ScrolledText(parent)
         l.insert(tk.INSERT, text)
         l.grid(row=0, column=0)

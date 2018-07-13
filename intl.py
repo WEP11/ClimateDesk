@@ -1,17 +1,17 @@
 import tkinter as tk
-import spc
 import cpc
 from tkinter import ttk
-from PIL import Image, ImageTk
-from io import BytesIO
-
-from tkinter.scrolledtext import ScrolledText
 
 
 def createIntlFrame(container, images):
+    """
+    This creates the time-product tabs within an international region
+    """
     f = ttk.Notebook(container)
 
-    products = ['Total Precipitation', 'Maximum Temperature', 'Minimum Temperature', 'Temperature Anomaly']
+    products = ['Total Precipitation', 'Maximum Temperature',
+                'Minimum Temperature', 'Temperature Anomaly']
+
     times = ['Weekly', 'Monthly', '3-Month']
 
     wk = ttk.Frame(f)
@@ -46,6 +46,7 @@ def createIntlFrame(container, images):
 
 
 def africa(container, images):
+    """Creates the Africa tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f11 = ttk.Frame(multipane)
@@ -63,6 +64,7 @@ def africa(container, images):
 
 
 def asia(container, images):
+    """ Creates the Asia tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -81,7 +83,9 @@ def asia(container, images):
 
     return multipane
 
+
 def australia(container, images):
+    """ Creates the Australia tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -94,7 +98,9 @@ def australia(container, images):
 
     return multipane
 
+
 def canada(container, images):
+    """ Creates the Canada tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -110,7 +116,9 @@ def canada(container, images):
 
     return multipane
 
+
 def europe(container, images):
+    """ Creates the Europe tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -123,7 +131,9 @@ def europe(container, images):
 
     return multipane
 
+
 def caucas(container, images):
+    """ Creates the East Europe tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -142,7 +152,9 @@ def caucas(container, images):
 
     return multipane
 
+
 def mexico(container, images):
+    """ Creates the Mexico tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -155,7 +167,9 @@ def mexico(container, images):
 
     return multipane
 
+
 def mideast(container, images):
+    """ Creates the Middle East tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
@@ -168,7 +182,9 @@ def mideast(container, images):
 
     return multipane
 
+
 def southAmerica(container, images):
+    """ Creates the South America tab container within a parent container"""
     multipane = ttk.Notebook(container)
 
     f2 = ttk.Frame(multipane)
