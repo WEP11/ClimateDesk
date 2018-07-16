@@ -29,15 +29,28 @@ def createImageFrame(container, image, noShow=False):
 
     iHgt = float(imgFile.size[1])
     iWdt = float(imgFile.size[0])
-    # print(iWdt, iHgt)
+    # print(iWdt, iHgt
+
+    # Scale the image if the height or width exceeds the window resolution
     if iWdt > cWdt:
         pct = (iWdt - cWdt)/iWdt
-        # pct = (cWdt/iWdt) - 1.0
         nWdt = int(cWdt)
         nHgt = int(iHgt - (iHgt * pct))
+    elif iHgt > cHgt:
+        pct = (iHgt - cHgt)/iHgt
+        nHgt = int(cHgt)
+        nWdt = int(iWdt - (iWdt * pct))
     else:
         nHgt = int(iHgt)
         nWdt = int(iWdt)
+
+    if nHgt > cHgt:
+        pct = (nHgt - cHgt)/nHgt
+        nHgt = int(cHgt)
+        nWdt = int(nWdt - (nWdt * pct))
+    else:
+        nHgt = int(nHgt)
+        nWdt = int(nWdt)
     # print(nWdt, nHgt)
     newImg = imgFile.resize((nWdt, nHgt))
     img = ImageTk.PhotoImage(newImg)
@@ -329,5 +342,166 @@ def telecon(container, images):
     p7.pack(side="left")
     p8 = createImageFrame(aao, images[7], noShow=True)
     p8.pack(side="left")
+
+    return f
+
+
+def enso(container, images):
+    """
+    Creates a tabbed container with the CPC ENSO information
+    """
+    f = ttk.Notebook(container)
+
+    sst = ttk.Frame(f)
+    olr = ttk.Frame(f)
+    wind = ttk.Frame(f)
+    sea = ttk.Frame(f)
+    outlook = ttk.Frame(f)
+
+    f.add(sst, text="SST")
+    f.add(olr, text="OLR")
+    f.add(wind, text="Wind")
+    f.add(sea, text="Ocean")
+    f.add(outlook, text="Nino 3.4 Outlook")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    createSstTabs(sst, images)
+    createWindTabs(wind, images)
+    createSeaTabs(sea, images)
+    createEnsoOutlookTabs(outlook, images)
+
+    p1 = createImageFrame(olr, images[4], noShow=True)
+    p1.pack(side="left")
+    p2 = createImageFrame(olr, images[5], noShow=True)
+    p2.pack(side="left")
+
+    return f
+
+
+def createSstTabs(container, images):
+    f = ttk.Notebook(container)
+
+    nino = ttk.Frame(f)
+    obs = ttk.Frame(f)
+
+    f.add(nino, text="Nino Regions")
+    f.add(obs, text="Observations")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p1 = createImageFrame(obs, images[0], noShow=True)
+    p1.pack(side="left")
+    p2 = createImageFrame(obs, images[1], noShow=True)
+    p2.pack(side="left")
+
+    p3 = createImageFrame(nino, images[2], noShow=True)
+    p3.pack(side="left")
+    p4 = createImageFrame(nino, images[3], noShow=True)
+    p4.pack(side="left")
+
+
+def createWindTabs(container, images):
+    f = ttk.Notebook(container)
+
+    mapA = ttk.Frame(f)
+    timLonA = ttk.Frame(f)
+
+    f.add(mapA, text="Map Anomalies")
+    f.add(timLonA, text="Time-Longitude Anom")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p1 = createImageFrame(mapA, images[6], noShow=True)
+    p1.pack(side="top")
+    p2 = createImageFrame(mapA, images[7], noShow=True)
+    p2.pack(side="top")
+
+    p3 = createImageFrame(timLonA, images[8])
+
+
+def createSeaTabs(container, images):
+    f = ttk.Notebook(container)
+
+    temps = ttk.Frame(f)
+    iso = ttk.Frame(f)
+    m55 = ttk.Frame(f)
+    m105 = ttk.Frame(f)
+    m155 = ttk.Frame(f)
+    seaLvl = ttk.Frame(f)
+
+    f.add(temps, text="Temperature")
+    f.add(iso, text="20C Isotherm")
+    f.add(m55, text="55m")
+    f.add(m105, text="105m")
+    f.add(m155, text="155m")
+    f.add(seaLvl, text="Sea Level")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p1 = createImageFrame(temps, images[9], noShow=True)
+    p1.pack(side="left")
+    p2 = createImageFrame(temps, images[16], noShow=True)
+    p2.pack(side="left")
+
+    p3 = createImageFrame(iso, images[10], noShow=True)
+    p3.pack(side="left")
+    p4 = createImageFrame(iso, images[11], noShow=True)
+    p4.pack(side="left")
+
+    p5 = createImageFrame(m55, images[12])
+    p6 = createImageFrame(m105, images[13])
+    p7 = createImageFrame(m155, images[14])
+    p8 = createImageFrame(seaLvl, images[15])
+
+
+def createEnsoOutlookTabs(container, images):
+    f = ttk.Notebook(container)
+    ta = ttk.Frame(f)
+    sa = ttk.Frame(f)
+    t = ttk.Frame(f)
+
+    f.add(ta, text="Anomaly")
+    f.add(sa, text="Std Anomaly")
+    f.add(t, text="Temperature")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p5 = createImageFrame(ta, images[17])
+    p6 = createImageFrame(sa, images[18])
+    p7 = createImageFrame(t, images[19])
+
+
+def mjo(container, images):
+    f = ttk.Notebook(container)
+    cpc = ttk.Frame(f)
+    d40 = ttk.Frame(f)
+    d90 = ttk.Frame(f)
+
+    f.add(cpc, text="CPC Index")
+    f.add(d40, text="40 Day WH")
+    f.add(d90, text="90 Day WH")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p5 = createImageFrame(cpc, images[0])
+    p6 = createImageFrame(d40, images[1])
+    p7 = createImageFrame(d90, images[2])
+
+    return f
+
+
+def blocking(container, images):
+    f = ttk.Notebook(container)
+    nh = ttk.Frame(f)
+    sh = ttk.Frame(f)
+
+    f.add(nh, text="NH")
+    f.add(sh, text="SH")
+    f.grid(row=0, column=1, rowspan=20, columnspan=10)
+
+    p1 = createImageFrame(nh, images[0], noShow=True)
+    p1.pack(side="left")
+    p2 = createImageFrame(nh, images[1], noShow=True)
+    p2.pack(side="left")
+
+    p3 = createImageFrame(sh, images[2], noShow=True)
+    p3.pack(side="left")
+    p4 = createImageFrame(sh, images[3], noShow=True)
+    p4.pack(side="left")
 
     return f

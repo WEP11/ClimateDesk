@@ -143,9 +143,9 @@ wpc = [
     "http://www.wpc.ncep.noaa.gov/medr/9nhwbg_conus.gif"
 ]
 sat = [
-    "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/20181901632_GOES16-ABI-CONUS-GEOCOLOR-1250x750.jpg",
-    "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/07/20181901637_GOES16-ABI-CONUS-07-1250x750.jpg",
-    "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/09/20181901637_GOES16-ABI-CONUS-09-1250x750.jpg"
+    "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/1250x750.jpg",
+    "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/07/1250x750.jpg",
+    "https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/09/1250x750.jpg"
 ]
 rad = [
     "https://radar.weather.gov/ridge/Conus/Loop/NatLoop.gif"
@@ -226,10 +226,10 @@ enso = [
     'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/uv850-30d.gif',  # 850mb Wind Anomalies
     'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/uv200-30d.gif',  # 200mb Wind Anomalies
     'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_update/u850a_c.gif',  # 850mb Time-Lon U Wind Anomalies
-    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkteq_xz.gif'  # Equatorial Sea Temps
-    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkd20eq2.gif'  # Time-Lon 20C Isotherm
-    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkd20eq2_anm.gif'  # Time-Lon 20C Anom Isotherm
-    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkteq2_anm_55m.gif'  # Time-Lon 55m Temp Anomalies
+    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkteq_xz.gif',  # Equatorial Sea Temps
+    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkd20eq2.gif',  # Time-Lon 20C Isotherm
+    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkd20eq2_anm.gif',  # Time-Lon 20C Anom Isotherm
+    'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkteq2_anm_55m.gif',  # Time-Lon 55m Temp Anomalies
     'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkteq2_anm_105m.gif',  # time-lon 105m Temp Anomalies
     'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wkteq2_anm_155m.gif',  # time-lon 155m Temp Anomalies
     'http://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ocean/weeklyenso_clim_81-10/wksl_anm.gif',  # Sea level anomalies
@@ -239,8 +239,8 @@ enso = [
     'http://www.cpc.ncep.noaa.gov/products/predictions/90day/tools/briefing/ssttt.gif',  # NINO3.4 SST Consolidated Outlook
 ]
 mjo = [
-    'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_mjo_index/tm_order.gif'  # MJO CPC Index
-    'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/obs_phase40_full.gif'  # MJO WH Index 40 Day
+    'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_mjo_index/tm_order.gif',  # MJO CPC Index
+    'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/obs_phase40_full.gif',  # MJO WH Index 40 Day
     'http://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/obs_phase90_full.gif'  # MJO WH Index 90 Day
 ]
 

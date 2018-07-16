@@ -40,7 +40,7 @@ def loadingBox(root):
 
     info4 = tk.Label(window)
     info4.configure(text="Climate Desk is a weather and climate data dashboard\
-that aggregates products the public space.")
+ that aggregates products across the public space.")
     info4.grid(row=3, column=0)
 
     info4 = tk.Label(window)
@@ -70,11 +70,12 @@ def getImageList(links, imageList):
     for link in links:
         try:
             response = requests.get(link, headers=headers)
+            response.raise_for_status()
             # imgFile = Image.open(BytesIO(response.content))
             # img = ImageTk.PhotoImage(imgFile)
             imageList.append(response.content)
-        except:
-            print(link)
+        except requests.exceptions.RequestException:
+            print(e, link)
 
 
 def getHprccList(links, imageList):
@@ -156,6 +157,7 @@ class Application(tk.Frame):
         self.mjoImg = []
         self.teleconImg = []
         self.intl = []
+        self.blockingImg = []
 
         nationalObs = resources.getHprccNatl()
         globalObs = resources.getIntlMaps()
@@ -210,13 +212,18 @@ class Application(tk.Frame):
         getImageList(resources.mjo, self.mjoImg)
 
         loading.step(12)
+        loadText.configure(text="Getting CPC Blocking Information...")
+        about.update()
+        getImageList(resources.blocking, self.blockingImg)
+
+        loading.step(12)
         loadText.configure(text="Getting CPC Teleconnection Information...")
         about.update()
         getImageList(resources.telecon, self.teleconImg)
 
         loading.step(12)
         loadText.configure(text="Getting CPC Global Climate Maps... (This will\
-                                 take a minute)")
+ take a minute)")
         about.update()
         getIntlImageList(globalObs, self.intl)
 
@@ -226,7 +233,7 @@ class Application(tk.Frame):
 
         for link in resources.textLinks:
             page = requests.get(link).text
-            bs = bshtml(page, "lxml")
+            bs = bshtml(page, "html.parser")
             self.text_prods.append(bs.pre.contents)
 
         loading.stop()
@@ -247,12 +254,12 @@ class Application(tk.Frame):
         # Create tabs
         nationalWx = ttk.Frame(self.categories)
         nationalClimate = ttk.Frame(self.categories)
-        regionalClimate = ttk.Frame(self.categories)
+        # regionalClimate = ttk.Frame(self.categories)
         internationalClimate = ttk.Frame(self.categories)
 
         self.categories.add(nationalWx, text="National Weather")
         self.categories.add(nationalClimate, text="National Climate")
-        self.categories.add(regionalClimate, text="Regional Climate")
+        # self.categories.add(regionalClimate, text="Regional Climate")
         self.categories.add(internationalClimate, text="International")
         self.categories.pack()
 
@@ -325,13 +332,16 @@ class Application(tk.Frame):
         enso = tk.Button(nationalClimate, text="ENSO",
                          command=lambda: self.createEnso(nationalClimate))
 
-        mjo = tk.Button(nationalClimate, text="MJO")
+        mjo = tk.Button(nationalClimate, text="MJO",
+                        command=lambda: self.createMjo(nationalClimate))
 
         telecon = tk.Button(nationalClimate, text="Teleconnections",
                             command=lambda:
                             self.createTelecon(nationalClimate))
 
-        blocks = tk.Button(nationalClimate, text="Blocking")
+        blocks = tk.Button(nationalClimate, text="Blocking",
+                           command=lambda:
+                           self.createBlocking(nationalClimate))
 
         climateReport.grid(row=0, column=0, sticky='W')
         past.grid(row=1, column=0, sticky='W')
@@ -368,7 +378,7 @@ class Application(tk.Frame):
                            command=lambda:
                            self.createEurope(internationalClimate))
 
-        caucas = tk.Button(internationalClimate, text="Black Sea",
+        caucas = tk.Button(internationalClimate, text="East Europe",
                            command=lambda:
                            self.createCaucas(internationalClimate))
 
@@ -442,6 +452,15 @@ class Application(tk.Frame):
         """Helper function to show the CPC teleconnection images"""
         self.climPanel.destroy()
         self.climPanel = cpc.telecon(container, self.teleconImg)
+
+    def createMjo(self, container):
+        """Helper function to show the CPC MJO indices"""
+        self.climPanel.destroy()
+        self.climPanel = cpc.mjo(container, self.mjoImg)
+
+    def createBlocking(self, container):
+        self.climPanel.destroy()
+        self.climPanel = cpc.blocking(container, self.blockingImg)
 
     def createAfrica(self, container):
         """Helper function to show the Africa products"""
